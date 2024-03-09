@@ -21,8 +21,8 @@ resource "kubernetes_deployment" "httpd" {
       }
       spec {
         container {
-          image = "dontrebootme/microbot:v1"
-          name  = "httpd"
+          image = "httpd"
+	  name  = "httpd"
           port {
             container_port = "80"
           }
