@@ -1,34 +1,26 @@
-resource "kubernetes_ingress_v1" "httpd_service_ingress" {
+resource "kubernetes_ingress_v1" "vscode-server-ingress" {
   metadata {
-    name = "httpd-service-ingress"
-    namespace = "testing"
+    name = "vscode-server-ingress"
+    namespace = kubernetes_namespace.vscode.metadata[0].name
   }
   spec {
-    default_backend {
-      service {
-        name = kubernetes_service_v1.httpd-service.metadata[0].name
-        port {
-          number = 80
-        }
-      }
-    }
     rule {
       http {
         path {
           backend {
             service {
-              name = kubernetes_service_v1.httpd-service.metadata[0].name
+              name = kubernetes_service_v1.vscode-server-service.metadata[0].name
               port {
-                number = 80
+                number = kubernetes_service_v1.vscode-server-service.spec[0].port[0].port
               }
             }
           }
-          path = "/"
+          path = ""
         }
       }
     }
-    tls {
-      secret_name = "tls-secret"
-    }
+    #tls {
+    #  secret_name = "tls-secret"
+    #}
   }
 }

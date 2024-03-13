@@ -1,17 +1,8 @@
-resource "kubernetes_namespace" "testing" {
+resource "kubernetes_namespace" "vscode" {
   metadata {
     annotations = {
-      name = "testing"
+      name = "vscode"
     }
-    name = "testing"
-  }
-}
-
-resource "kubernetes_namespace" "stateful" {
-  metadata {
-    annotations = {
-      name = "stateful"
-    }
-    name = "stateful"
+    name = "vscode"
   }
 }

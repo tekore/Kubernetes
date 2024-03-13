@@ -1,45 +1,53 @@
-resource "kubernetes_deployment" "httpd" {
+resource "kubernetes_deployment" "vscode-server" {
   metadata {
-    name = "httpd"
-    namespace = "testing"
+    name = "vscode-server"
+    namespace = kubernetes_namespace.vscode.metadata[0].name
     labels = {
-      app = "httpd"
+      app = "vscode"
     }
   }
   spec {
     replicas = 3
     selector {
       match_labels = {
-        app = "httpd"
+        app = "vscode-server"
       }
     }
     template {
       metadata {
         labels = {
-          app = "httpd"
+          app = "vscode-server"
         }
       }
       spec {
         container {
-          image = "httpd"
-	  name  = "httpd"
+          image = "codercom/code-server:latest"
+	        name  = "vscode-server"
           port {
-            container_port = "80"
+            container_port = 3000
+          }
+	        env {
+            name = "PORT"
+            value = 3000
+          }
+          env {
+            name = "PASSWORD"
+            value = "Changeme123!"
           }
           resources {
             limits = {
-              cpu    = "0.5"
+              cpu    = "2"
               memory = "512Mi"
             }
             requests = {
-              cpu    = "250m"
-              memory = "50Mi"
+              cpu    = "1"
+              memory = "500Mi"
             }
           }
           liveness_probe {
             http_get {
               path = "/"
-              port = 80
+              port = 3000
               http_header {
                 name  = "X-Custom-Header"
                 value = "Awesome"
