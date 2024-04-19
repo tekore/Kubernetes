@@ -6,3 +6,12 @@ resource "kubernetes_namespace" "vscode" {
     name = "vscode"
   }
 }
+
+resource "kubernetes_namespace" "rclone" {
+  metadata {
+    annotations = {
+      name = "rclone"
+    }
+    name = "rclone"
+  }
+}
