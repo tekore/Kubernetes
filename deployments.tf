@@ -24,7 +24,7 @@ resource "kubernetes_deployment" "rclone" {
           name = "rclone"
           image = "rclone/rclone:latest"
           command = ["rclone"]
-	        args = ["sync", "OneDrive:/Backup", "GoogleDrive:/Backup", "-P"]
+          args = ["sync", "OneDrive:/Backup", "GoogleDrive:/Backup", "-P"]
           #port {
           #  container_port = 5572
           #}
