@@ -23,15 +23,8 @@ resource "kubernetes_deployment" "rclone" {
         container {
           name = "rclone"
           image = "rclone/rclone:latest"
-          command = ["rclone"]
-          args = ["sync", "OneDrive:/Backup", "GoogleDrive:/Backup", "-P"]
-          #port {
-          #  container_port = 5572
-          #}
-	        #env {
-          #  name = "PORT"
-          #  value = 5572
-          #}
+          command = ["sh", "-c"]
+          args = ["sleep 600", "rclone sync OneDrive:/Backup GoogleDrive:/Backup -P"]
           resources {
             limits = {
               cpu    = "100m"
@@ -80,17 +73,17 @@ resource "kubernetes_deployment" "rclone" {
     }
   }
 }
-#######################################
+
 resource "kubernetes_deployment" "vscode-server" {
   metadata {
     name = "vscode-server"
     namespace = kubernetes_namespace.vscode.metadata[0].name
     labels = {
-      app = "vscode"
+      app = "vscode-server"
     }
   }
   spec {
-    replicas = 3
+    replicas = 2
     selector {
       match_labels = {
         app = "vscode-server"
@@ -119,22 +112,70 @@ resource "kubernetes_deployment" "vscode-server" {
           }
           resources {
             limits = {
-              cpu    = "2"
-              memory = "512Mi"
+              cpu    = "1"
+              memory = "2048Mi"
             }
             requests = {
-              cpu    = "1"
-              memory = "500Mi"
+              cpu    = "1000m"
+              memory = "2048Mi"
             }
           }
           liveness_probe {
             http_get {
               path = "/"
               port = 3000
-              http_header {
-                name  = "X-Custom-Header"
-                value = "Awesome"
-              }
+            }
+            initial_delay_seconds = 3
+            period_seconds        = 3
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_deployment" "pigallery2" {
+  metadata {
+    name = "pigallery2"
+    namespace = kubernetes_namespace.pigallery2.metadata[0].name
+    labels = {
+      app = "pigallery2"
+    }
+  }
+  spec {
+    replicas = 1
+    selector {
+      match_labels = {
+        app = "pigallery2"
+      }
+    }
+    template {
+      metadata {
+        labels = {
+          app = "pigallery2"
+        }
+      }
+      spec {
+        container {
+          image = "bpatrik/pigallery2:latest"
+	        name  = "pigallery2"
+          port {
+            container_port = 80
+          }
+          resources {
+            limits = {
+              cpu    = "1"
+              memory = "2048Mi"
+            }
+            requests = {
+              cpu    = "200m"
+              memory = "2048Mi"
+            }
+          }
+          liveness_probe {
+            http_get {
+              path = "/"
+              port = 80
             }
             initial_delay_seconds = 3
             period_seconds        = 3
