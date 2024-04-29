@@ -24,15 +24,15 @@ resource "kubernetes_deployment" "rclone" {
           name = "rclone"
           image = "rclone/rclone:latest"
           command = ["sh", "-c"]
-          args = ["sleep 600", "rclone sync OneDrive:/Backup GoogleDrive:/Backup -P"]
+          args = ["sleep 600 && rclone sync OneDrive:/Backup GoogleDrive:/Backup -P"]
           resources {
             limits = {
-              cpu    = "100m"
-              memory = "512Mi"
+              cpu    = "10m"
+              memory = "250Mi"
             }
             requests = {
-              cpu    = "100m"
-              memory = "512Mi"
+              cpu    = "10m"
+              memory = "250Mi"
             }
           }
           volume_mount {
