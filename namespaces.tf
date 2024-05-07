@@ -24,3 +24,12 @@ resource "kubernetes_namespace" "pigallery2" {
     name = "pigallery2"
   }
 }
+
+resource "kubernetes_namespace" "jellyfin" {
+  metadata {
+    annotations = {
+      name = "jellyfin"
+    }
+    name = "jellyfin"
+  }
+}

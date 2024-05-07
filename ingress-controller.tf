@@ -48,7 +48,7 @@ resource "kubernetes_ingress_v1" "pigallery2-ingress-rule" {
               }
             }
           }
-          path = ""
+          path = "/gallery"
         }
       }
     }

@@ -50,6 +50,11 @@ resource "kubernetes_deployment" "rclone" {
              mount_path = "/root/.rclone.conf"
              read_only = true
            }
+           #volume_mount {
+           #  name       = "rclone-backup"
+           #  mount_path = "/data"
+           #  read_only = true
+           #}
         }
         volume {
           name = "rclone-passwd"
@@ -69,6 +74,9 @@ resource "kubernetes_deployment" "rclone" {
             path = "/var/rclone-conf/rclone.conf"
           }
         }
+        #volume {
+        #  name = "rclonebackup"
+        #}
       }
     }
   }
@@ -83,7 +91,7 @@ resource "kubernetes_deployment" "vscode-server" {
     }
   }
   spec {
-    replicas = 2
+    replicas = 1
     selector {
       match_labels = {
         app = "vscode-server"
@@ -109,16 +117,6 @@ resource "kubernetes_deployment" "vscode-server" {
           env {
             name = "PASSWORD"
             value = "Changeme123!"
-          }
-          resources {
-            limits = {
-              cpu    = "1"
-              memory = "2048Mi"
-            }
-            requests = {
-              cpu    = "1000m"
-              memory = "2048Mi"
-            }
           }
           liveness_probe {
             http_get {
@@ -162,15 +160,22 @@ resource "kubernetes_deployment" "pigallery2" {
           port {
             container_port = 80
           }
-          resources {
-            limits = {
-              cpu    = "1"
-              memory = "2048Mi"
-            }
-            requests = {
-              cpu    = "200m"
-              memory = "2048Mi"
-            }
+          volume_mount {
+             name       = "db"
+             mount_path = "/app/data/db"
+          }
+          volume_mount {
+             name       = "config"
+             mount_path = "/app/data/config"
+          }
+          volume_mount {
+             name       = "images"
+             mount_path = "/app/data/images"
+             read_only = true
+          }
+          volume_mount {
+             name       = "tmp"
+             mount_path = "/app/data/tmp"
           }
           liveness_probe {
             http_get {
@@ -181,7 +186,97 @@ resource "kubernetes_deployment" "pigallery2" {
             period_seconds        = 3
           }
         }
+        volume {
+          name = "db"
+          host_path {
+            path = "/var/pigallery2/db"
+          }
+        }
+        volume {
+          name = "config"
+          host_path {
+            path = "/var/pigallery2/config"
+          }
+        }
+        volume {
+          name = "images"
+          host_path {
+            path = "/var/pigallery2/images" #Path the the images folder
+          }
+        }
+        volume {
+          name = "tmp"
+          host_path {
+            path = "/var/pigallery2/tmp"
+          }
+        }
       }
     }
   }
 }
+
+# resource "kubernetes_deployment" "jellyfin" {
+#   metadata {
+#     name = "jellyfin"
+#     namespace = kubernetes_namespace.jellyfin.metadata[0].name
+#     labels = {
+#       app = "jellyfin"
+#     }
+#   }
+#   spec {
+#     replicas = 1
+#     selector {
+#       match_labels = {
+#         app = "jellyfin"
+#       }
+#     }
+#     template {
+#       metadata {
+#         labels = {
+#           app = "jellyfin"
+#         }
+#       }
+#       spec {
+#         container {
+#           image = "jellyfin/jellyfin:latest"
+# 	        name  = "jellyfin"
+#           port {
+#             container_port = 80
+#           }
+#           #volume_mount {
+#           #   name       = "db"
+#           #   mount_path = "/app/data/db"
+#           #}
+#           liveness_probe {
+#             http_get {
+#               path = "/"
+#               port = 80
+#             }
+#             initial_delay_seconds = 3
+#             period_seconds        = 3
+#           }
+#         }
+#         #volume {
+#         #  name = "db"
+#         #  host_path {
+#         #    path = "/var/pigallery2/db"
+#         #  }
+#         #}
+#       }
+#     }
+#   }
+# }
+
+#  #--volume /path/to/config:/config \ # Alternatively --volume jellyfin-config:/config
+#  #--volume /path/to/cache:/cache \ # Alternatively --volume jellyfin-cache:/cache
+#  #--mount type=bind,source=/path/to/media,target=/media \
+
+# # jellyfin env variables:
+# #["[JELLYFIN_CONFIG_DIR, /config/config]"
+# #"[JELLYFIN_WEB_DIR, /jellyfin/jellyfin-web]"
+# #"[JELLYFIN_DATA_DIR, /config]"
+# #"[DOTNET_SYSTEM_GLOBALIZATION_INVARIANT, 1]"
+# #"[JELLYFIN_FFMPEG, /usr/lib/jellyfin-ffmpeg/ffmpeg]"
+# #"[JELLYFIN_LOG_DIR, /config/log]"
+# #"[JELLYFIN_CACHE_DIR, /cache]"]
+# #(Don't think I need to use all of these)
