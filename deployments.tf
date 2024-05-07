@@ -71,7 +71,7 @@ resource "kubernetes_deployment" "rclone" {
         volume {
           name = "rclone-conf"
           host_path{
-            path = "/var/rclone-conf/rclone.conf"
+            path = "/var/containers/rclone-conf/rclone.conf"
           }
         }
         #volume {
