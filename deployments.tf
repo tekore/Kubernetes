@@ -50,10 +50,10 @@ resource "kubernetes_deployment" "rclone" {
              mount_path = "/root/.rclone.conf"
              read_only = true
            }
-           #volume_mount {
-           #  name       = "rclonebackup"
-           #  mount_path = "/data"
-           #}
+           volume_mount {
+             name       = "rclonebackup"
+             mount_path = "/data"
+           }
         }
         volume {
           name = "rclone-passwd"
@@ -73,12 +73,12 @@ resource "kubernetes_deployment" "rclone" {
             path = "/var/containers/rclone-conf/rclone.conf"
           }
         }
-        #volume {
-        #  name = "rclonebackup"
-        #  host_path{
-        #    path = "/backup-data"
-        #  }
-        #}
+        volume {
+          name = "rclonebackup"
+          host_path{
+            path = "/rclone_data"
+          }
+        }
       }
     }
   }
@@ -203,15 +203,9 @@ resource "kubernetes_deployment" "pigallery2" {
         volume {
           name = "images"
           host_path {
-            path = "/var/pigallery2/images" #Path the the images folder
+            path = "/var/pigallery2/images"
           }
         }
-        #volume {
-        #  name = "images"
-        #  persistent_volume_claim {
-        #    claim_name = "rclonebackup"
-        #  }
-        #}
         volume {
           name = "tmp"
           host_path {
