@@ -10,21 +10,3 @@ resource "kubernetes_storage_class" "sclass" {
   }
   mount_options = ["file_mode=0700", "dir_mode=0777", "mfsymlinks", "uid=1000", "gid=1000", "nobrl", "cache=none"]
 }
-
-#resource "kubernetes_persistent_volume_claim" "rclone_backup" {
-#  metadata {
-#    name = "rclonebackup"
-#    namespace = "rclone"
-#  }
-#  spec {
-#    storage_class_name = kubernetes_storage_class.sclass.metadata[0].name
-#    storage_class_name = "microk8s-hostpath"
-#    access_modes = ["ReadWriteMany"]
-#    resources {
-#      requests = {
-#        storage = "100Gi"
-#      }
-#    }
-#    #volume_name = "rclonebackup"
-#  }
-#}
