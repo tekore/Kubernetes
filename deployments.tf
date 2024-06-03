@@ -24,15 +24,15 @@ resource "kubernetes_deployment" "rclone" {
           name = "rclone"
           image = "rclone/rclone:latest"
           command = ["sh", "-c"]
-          args = ["sleep 600 && rclone sync OneDrive:/Backup GoogleDrive:/Backup -P"]
+          args = ["sleep 600 && rclone sync OneDrive:/Backup GoogleDrive:/Backup -P && rclone sync OneDrive:/Backup /data -P"]
           resources {
             limits = {
-              cpu    = "10m"
-              memory = "250Mi"
+              cpu    = "100m"
+              memory = "200Mi"
             }
             requests = {
-              cpu    = "10m"
-              memory = "250Mi"
+              cpu    = "100m"
+              memory = "200Mi"
             }
           }
           volume_mount {
@@ -162,6 +162,18 @@ resource "kubernetes_deployment" "pigallery2" {
           port {
             container_port = 80
           }
+          env {
+            name = "NODE_ENV"
+            value = "Production"
+          }
+          env {
+            name = "Server-Log-level"
+            value = "debug"
+          }
+          env {
+            name = "Sharing-enabled"
+            value = "false"
+          }
           volume_mount {
              name       = "db"
              mount_path = "/app/data/db"
@@ -203,7 +215,7 @@ resource "kubernetes_deployment" "pigallery2" {
         volume {
           name = "images"
           host_path {
-            path = "/var/pigallery2/images"
+            path = "/rclone_data/Pictures"
           }
         }
         volume {
