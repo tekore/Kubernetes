@@ -2,9 +2,10 @@ resource "kubernetes_ingress_v1" "vscode-ingress-rule" {
   metadata {
     name = "vscode-ingress-rule"
     namespace = "vscode"
-    #annotations = {
-    #  "cert-manager.io/cluster-issuer" = "letsencrypt" 
-    #}
+    annotations = {
+      #"cert-manager.io/cluster-issuer" = "letsencrypt"
+      "nginx.ingress.kubernetes.io/rewrite-target" = "/"
+    }
   }
   spec {
     rule {
@@ -18,7 +19,7 @@ resource "kubernetes_ingress_v1" "vscode-ingress-rule" {
               }
             }
           }
-          path = "/vscode"
+          path = "/"
         }
       }
     }
@@ -32,9 +33,10 @@ resource "kubernetes_ingress_v1" "pigallery2-ingress-rule" {
   metadata {
     name = "pigallery2-ingress-rule"
     namespace = "pigallery2"
-    #annotations = {
-    #  "cert-manager.io/cluster-issuer" = "letsencrypt" 
-    #}
+    annotations = {
+    #  "cert-manager.io/cluster-issuer" = "letsencrypt"
+      "nginx.ingress.kubernetes.io/rewrite-target" = "/"
+    }
   }
   spec {
     rule {
@@ -48,7 +50,7 @@ resource "kubernetes_ingress_v1" "pigallery2-ingress-rule" {
               }
             }
           }
-          path = "/"
+          path = "/gallery"
         }
       }
     }
