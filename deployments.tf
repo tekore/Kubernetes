@@ -24,7 +24,7 @@ resource "kubernetes_deployment" "rclone" {
           name = "rclone"
           image = "rclone/rclone:latest"
           command = ["sh", "-c"]
-          args = ["sleep 600 && rclone sync OneDrive:/Backup GoogleDrive:/Backup -P && rclone sync OneDrive:/Backup /NAS -P"]
+          args = ["sleep 600 && rclone sync OneDrive:/Backup GoogleDrive:/Backup -P && rclone sync OneDrive:/Backup /data -P"]
           resources {
             limits = {
               cpu    = "100m"
