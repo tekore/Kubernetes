@@ -76,7 +76,7 @@ resource "kubernetes_deployment" "rclone" {
         volume {
           name = "rclonebackup"
           host_path{
-            path = "/rclone_data"
+            path = "/NAS"
           }
         }
       }
@@ -215,7 +215,7 @@ resource "kubernetes_deployment" "pigallery2" {
         volume {
           name = "images"
           host_path {
-            path = "/rclone_data/Pictures"
+            path = "/NAS/Pictures"
           }
         }
         volume {

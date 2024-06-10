@@ -19,7 +19,7 @@ resource "kubernetes_ingress_v1" "vscode-ingress-rule" {
               }
             }
           }
-          path = "/"
+          path = "/vscode"
         }
       }
     }
@@ -35,7 +35,7 @@ resource "kubernetes_ingress_v1" "pigallery2-ingress-rule" {
     namespace = "pigallery2"
     annotations = {
     #  "cert-manager.io/cluster-issuer" = "letsencrypt"
-      "nginx.ingress.kubernetes.io/rewrite-target" = "/"
+      #"nginx.ingress.kubernetes.io/rewrite-target" = "/"
     }
   }
   spec {
@@ -50,7 +50,7 @@ resource "kubernetes_ingress_v1" "pigallery2-ingress-rule" {
               }
             }
           }
-          path = "/gallery"
+          path = ""
         }
       }
     }
