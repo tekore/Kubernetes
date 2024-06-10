@@ -24,7 +24,7 @@ resource "kubernetes_deployment" "rclone" {
           name = "rclone"
           image = "rclone/rclone:latest"
           command = ["sh", "-c"]
-          args = ["sleep 600 && rclone sync OneDrive:/Backup GoogleDrive:/Backup -P && rclone sync OneDrive:/Backup /data -P"]
+          args = ["sleep 600 && rclone sync OneDrive:/Backup GoogleDrive:/Backup -P && rclone sync OneDrive:/Backup /NAS -P"]
           resources {
             limits = {
               cpu    = "100m"
@@ -70,7 +70,7 @@ resource "kubernetes_deployment" "rclone" {
         volume {
           name = "rclone-conf"
           host_path{
-            path = "/var/containers/rclone-conf/rclone.conf"
+            path = "/var/rclone-conf/rclone.conf"
           }
         }
         volume {
