@@ -1,0 +1,13 @@
+name: GitHub Actions Kubernetes
+run-name: Kubernetes Terraform 🚀
+on: [push]
+jobs:
+  First:
+    runs-on: hetzner
+    env:
+      KEY: ${{ secrets.KEY }}
+    steps:
+      - run: echo "$KEY"
+      - uses: actions/checkout@v2
+      - run: terraform init
+      - run: terraform plan -var access_key="$KEY"
